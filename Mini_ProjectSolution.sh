@@ -86,16 +86,10 @@ done
 
 DeleteEmployee()
  {
- clear
  ans=0
  while test "$ans" -eq 0
  do
- 
- #	echo -e "Enter employee number to delete record-\c"
- #	read eno
-
-
-	echo -e "Please enter empNo to delete-\c"
+	echo  "Please enter empNo to delete"
 	echo -e "\t EmpNo should start from E or W"
 	echo -e  "\t which should follwed by number in range 99-900"
     while true
@@ -124,7 +118,7 @@ DeleteEmployee()
 	else
 		echo "Employee $eno not found"
 	fi
- echo "Enter o to delete  next employee and 1 to come out of add menu of employee"
+ echo "Enter o to delete  next employee and 1 to come out of delete menu of employee"
  read ans
 done
 }
@@ -134,9 +128,6 @@ EditEmployee()
 {
 
 echo "Please follow the instructions to edit an existing employee data"
-#echo "Enter Employee number to Edit "
-#read eno
-
 
 	echo -e "Please enter empNo to Edit"
 	echo -e "\t EmpNo should start from E or W"
@@ -165,22 +156,68 @@ if grep "^$eno" employee.dat > /dev/null
 	do
 		meno=`echo "$ln"|cut -d":" -f1`
 		name=`echo "$ln"|cut -d":" -f2`
-		desg=`echo "$ln"|cut -d":" -f3`
+		desgn=`echo "$ln"|cut -d":" -f3`
 		dept=`echo "$ln"|cut -d":" -f4`
-		sal=`echo "$ln"|cut -d":" -f5`
+		salary=`echo "$ln"|cut -d":" -f5`
 		if [ "$eno" = "$meno" ]
 			then 
-			echo "Enter new name"
-			read name
-			echo "Enter desgnation"
-			read desg
-			echo "Enter dept"
-			read dept
-			echo "enter salary"
-			read sal
-			echo "$meno:$name:$desg:$dept:$sal">>temp
+			echo "Please enter New Employee Name"
+			echo -e "\t Employee name should be minimum of 5 letters"
+			while true
+			do
+				read name
+				len=`expr length "$name"`
+				if test "$len" -lt 5
+					then echo "Name should be minimum of 5 letters"
+					continue
+				else
+					break
+				fi
+			done
+
+
+			echo -e "Please enter new department name{IT\ACCT\PERS\MKTG}"
+			while true
+			do
+				read dept
+				if [ "$dept" = "IT" -o "$dept" = "ACCT" -o "$dept" = "PERS" -o "$dept" = "MKTG" ]
+					then break
+				else
+					echo "Invalid department,should be IT or ACCT or PERS or MKTG"
+					continue
+				fi
+			done
+
+			
+			echo "Please enter new  designation{EXEC\MANAGER\DIRECTOR\INTERN}"
+			while true
+			do
+				read desgn
+				if [ "$desgn" = "EXEC" -o "$desgn" = "MANAGER" -o "$desgn" = "DIRECTOR" -o "$desgn" = "INTERN" ]
+					then break
+				else
+					echo "Invalid designation,should be EXECor MANAGER or DIRECTOR or INTERN"
+					continue
+				fi
+			done
+
+			
+			echo "Please enter employee salary in range of 25K to 25l"
+			while true
+			do
+				read salary
+				if test "$salary" -lt 25000 -o "$salary" -ge 250000
+					then echo "Please enter salary in the specified range of 25000 to 250000"
+					continue
+				else
+		 			 break
+				fi
+			done
+
+
+			echo "$meno:$name:$dept:$desgn:$salary">>temp
 		else
-			echo "$meno:$name:$desg:$dept:$sal">>temp
+			echo "$meno:$name:$dept:$desgn:$salary">>temp
 		fi
 	done
 else
@@ -188,8 +225,6 @@ else
 fi
 mv temp employee.dat
 
-#read
-#clear
 }
 
 
@@ -197,10 +232,22 @@ ViewEmpRecords()
 {
 echo "Total Record in Emp database is as below:"
 
-cat employee.dat
+#cat employee.dat
+echo -e `date +'%d-%m-%y' `
 
-read
-clear
+echo -e                  "Empno \t    EmpName \t      Designation \t         Department \t             Salary"
+
+for ln in `cat employee.dat`
+	do
+		meno=`echo "$ln"|cut -d":" -f1`
+		name=`echo "$ln"|cut -d":" -f2`
+		desgn=`echo "$ln"|cut -d":" -f3`
+		dept=`echo "$ln"|cut -d":" -f4`
+		salary=`echo "$ln"|cut -d":" -f5`
+  
+		echo -e  " "$meno" \t "$name" \t       "$desgn" \t                 "$dept" \t               "$salary" "
+	done
+	
 }
 
 AddEmpToCloud()
@@ -225,9 +272,28 @@ fi
 ViewCloudStatus()
 {
 echo "Please find cloud details as below:"
+#who
+echo        "User                                 Terminal                             Date          	 	 Time              IP"
+for ln in `who|tr -s " " ":"`
+do
+	f1=`echo "$ln"|cut -d":" -f1`
+	
+	f2=`echo "$ln"|cut -d":" -f2`
 
-read
-clear
+        f3=`echo "$ln"|cut -d":" -f3`
+	
+	f4=`echo "$ln"|cut -d":" -f4`
+	
+	f5=`echo "$ln"|cut -d":" -f5`
+
+	f6=`echo "$ln"|cut -d":" -f6`
+    
+	echo "$f1                            $f2                         $f3             		$f4:$f5             $f6"
+done
+	
+
+#read
+#clear
 }
 
 
